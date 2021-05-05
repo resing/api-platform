@@ -15,26 +15,11 @@ class CustomApiTestCase extends ApiTestCase
     use Factories;
     use ResetDatabase;
 
-    protected function createUser(string $email, string $password)
-    {
-        $user = new User();
-        $user->setEmail($email);
-        $user->setUsername(substr($email, 0, strpos($email, '@')));
-        $encoded = self::$container->get('security.password_encoder')
-            ->encodePassword($user, $password);
-        $user->setPassword($encoded);
-
-        $em = self::$container->get('doctrine')->getManager();
-        $em->persist($user);
-        $em->flush();
-
-        return $user;
-
-    }
-
-
-    protected function getToken(Client $client, $userOrUsername, string $password = UserFactory::DEFAULT_PASSWORD): string
-    {
+    protected function getToken(
+        Client $client,
+        $userOrUsername,
+        string $password = UserFactory::DEFAULT_PASSWORD
+    ): string {
         if ($userOrUsername instanceof User || $userOrUsername instanceof Proxy) {
             $username = $userOrUsername->getUsername();
         } elseif (is_string($userOrUsername)) {
@@ -61,8 +46,11 @@ class CustomApiTestCase extends ApiTestCase
         return $data->token;
     }
 
-    protected function createClientWithCredentials(Client $client, $username, string $password = UserFactory::DEFAULT_PASSWORD): Client
-    {
+    protected function loginUserWithCredentials(
+        Client $client,
+        $username,
+        string $password = UserFactory::DEFAULT_PASSWORD
+    ): Client {
         $token = $this->getToken($client, $username, $password);
         $client->setDefaultOptions(['headers' => ['authorization' => 'Bearer ' . $token]]);
 

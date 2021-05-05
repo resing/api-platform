@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Tests;
-
 
 use App\Factory\UserFactory;
 
@@ -16,11 +14,11 @@ class UserResourceTest extends CustomApiTestCase
         $userAdmin = UserFactory::new()->create([
             'roles' => ['ROLE_ADMIN']
         ]);
-        $this->createClientWithCredentials($client, $userAdmin)
+        $this->loginUserWithCredentials($client, $userAdmin)
             ->request('GET', '/api/users');
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['hydra:totalItems' => 3]);
-        $this->createClientWithCredentials($client, $user)
+        $this->loginUserWithCredentials($client, $user)
             ->request('GET', '/api/users');
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['hydra:totalItems' => 1]);
