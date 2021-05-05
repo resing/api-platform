@@ -15,11 +15,6 @@ class CustomApiTestCase extends ApiTestCase
     use Factories;
     use ResetDatabase;
 
-    public function setUp(): void
-    {
-        self::bootKernel();
-    }
-
     protected function createUser(string $email, string $password)
     {
         $user = new User();
@@ -37,21 +32,6 @@ class CustomApiTestCase extends ApiTestCase
 
     }
 
-//    protected function getToken(string $email, $password): string
-//    {
-//        $response = static::createClient()
-//            ->request('POST', '/api/login_check',
-//            [
-//                'json' => [
-//                    'username' => substr($email, 0, strpos($email, '@')),
-//                    'password' => $password,
-//                ]
-//            ]);
-//        $this->assertResponseIsSuccessful();
-//        $data = \json_decode($response->getContent());
-//
-//        return $data->token;
-//    }
 
     protected function getToken(Client $client, $userOrUsername, string $password = UserFactory::DEFAULT_PASSWORD): string
     {
@@ -76,7 +56,6 @@ class CustomApiTestCase extends ApiTestCase
                     ]
                 ]);
         $this->assertResponseIsSuccessful();
-
         $data = \json_decode($response->getContent());
 
         return $data->token;
@@ -84,9 +63,7 @@ class CustomApiTestCase extends ApiTestCase
 
     protected function createClientWithCredentials(Client $client, $username, string $password = UserFactory::DEFAULT_PASSWORD): Client
     {
-        //$username = $this->createUser($username, $password);
         $token = $this->getToken($client, $username, $password);
-
         $client->setDefaultOptions(['headers' => ['authorization' => 'Bearer ' . $token]]);
 
         return $client;
