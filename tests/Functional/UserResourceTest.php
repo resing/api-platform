@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Functional;
 
 use App\Factory\UserFactory;
+
 
 class UserResourceTest extends CustomApiTestCase
 {
