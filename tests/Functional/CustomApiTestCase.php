@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Functional;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\Entity\User;
+use App\Factory\CategoryFactory;
+use App\Factory\ProductFactory;
 use App\Factory\UserFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\Test\Factories;
@@ -55,5 +59,32 @@ class CustomApiTestCase extends ApiTestCase
         $client->setDefaultOptions(['headers' => ['authorization' => 'Bearer ' . $token]]);
 
         return $client;
+    }
+
+    /**
+     * @return \App\Entity\User|object|\Zenstruck\Foundry\Proxy
+     */
+    protected function createUserWithProduct()
+    {
+        $user = UserFactory::new()->create();
+        $category = CategoryFactory::new()->create();
+        ProductFactory::new()->create([
+            'category' => $category,
+            'owner' => $user
+        ]);
+
+        return $user;
+    }
+
+    /**
+     * @return \App\Entity\User|object|\Zenstruck\Foundry\Proxy
+     */
+    protected function createUserAdmin()
+    {
+        $userAdmin = UserFactory::new()->create([
+            'roles' => ['ROLE_ADMIN']
+        ]);
+
+        return $userAdmin;
     }
 }

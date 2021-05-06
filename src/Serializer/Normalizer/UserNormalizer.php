@@ -38,11 +38,10 @@ class UserNormalizer implements ContextAwareNormalizerInterface, CacheableSuppor
             $context['groups'][] = 'owner:read';
         }
         $context[self::ALREADY_CALLED] = true;
-        $data = $this->normalizer->normalize($object, $format, $context);
 
         // Here: add, edit, or delete some data
 
-        return $data;
+        return $this->normalizer->normalize($object, $format, $context);
     }
 
     public function hasCacheableSupportsMethod(): bool
