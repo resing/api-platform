@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
     }
     public function load(ObjectManager $manager)
     {
-        UserFactory::new()->create([
+        $userAdmin = UserFactory::new()->create([
             'email' => 'admin@example.com',
             'username' => 'admin',
             'roles' => ['ROLE_ADMIN'],
@@ -40,6 +40,14 @@ class AppFixtures extends Fixture
         ]);
 
         $productFactory = ProductFactory::new();
+        $productFactory->create([
+            'name' => 'verre',
+            'description' => 'this article add by admin',
+            'price' => 500,
+            'owner' => $userAdmin,
+            'category' => $categoryFactory2,
+        ]);
+
         $productFactory->create([
             'name' => 'chemise',
             'description' => 'When I drive it to your house, it will sit in the passenger seat of my car.',

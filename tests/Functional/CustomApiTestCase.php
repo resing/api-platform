@@ -87,4 +87,16 @@ class CustomApiTestCase extends ApiTestCase
 
         return $userAdmin;
     }
+
+    protected function createAdminWithProduct()
+    {
+        $userAdmin = $this->createUserAdmin();
+        $category = CategoryFactory::new()->create();
+        ProductFactory::new()->create([
+            'category' => $category,
+            'owner' => $userAdmin
+        ]);
+
+        return $userAdmin;
+    }
 }

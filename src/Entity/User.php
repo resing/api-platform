@@ -64,7 +64,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "product:read"})
      */
     private $username;
     /**
@@ -83,6 +83,12 @@ class User implements UserInterface
      * @Groups({"admin:read", "owner:read"})
      */
     private $Birthday;
+
+    /**
+     * @var bool
+     * @Groups({"admin:read"})
+     */
+    private $isMe = false;
 
     public function __construct()
     {
@@ -239,5 +245,21 @@ class User implements UserInterface
         $this->Birthday = $Birthday;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsMe(): bool
+    {
+        return $this->isMe;
+    }
+
+    /**
+     * @param bool $isMe
+     */
+    public function setIsMe(bool $isMe): void
+    {
+        $this->isMe = $isMe;
     }
 }

@@ -70,6 +70,11 @@ class Product
      */
     private $isPublished = false;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantity;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -160,6 +165,18 @@ class Product
     public function setIsPublished(bool $isPublished): self
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

@@ -34,4 +34,23 @@ class ProductResourceTest extends CustomApiTestCase
             ->request('GET', '/api/products')->toArray();
         $this->assertArrayHasKey('isPublished', $data['hydra:member'][0]);
     }
+
+    public function testIsMe()
+    {
+        $client = self::createClient();
+        $userAdmin = $this->createAdminWithProduct();
+        $this->loginUserWithCredentials($client, $userAdmin)
+            ->request('GET', '/api/products');
+        $this->assertJsonContains(['hydra:member' => [
+            0 => [
+                'owner' => [
+                    'isMe' => true
+                ]
+            ]
+        ]]);
+        $user = $this->createUserWithProduct();
+        $data = $this->loginUserWithCredentials($client, $user)
+            ->request('GET', '/api/products')->toArray();
+        $this->assertArrayNotHasKey('isMe', $data['hydra:member'][0]['owner']);
+    }
 }
