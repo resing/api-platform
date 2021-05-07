@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Factory\CategoryFactory;
 use App\Factory\ProductFactory;
+use App\Factory\UserFactory;
 
 class ProductResourceTest extends CustomApiTestCase
 {
@@ -38,19 +40,25 @@ class ProductResourceTest extends CustomApiTestCase
     public function testIsMe()
     {
         $client = self::createClient();
-        $userAdmin = $this->createAdminWithProduct();
-        $this->loginUserWithCredentials($client, $userAdmin)
-            ->request('GET', '/api/products');
-        $this->assertJsonContains(['hydra:member' => [
-            0 => [
-                'owner' => [
-                    'isMe' => true
-                ]
-            ]
-        ]]);
-        $user = $this->createUserWithProduct();
+        $user = UserFactory::new()->create();
+        $category = CategoryFactory::new()->create();
+        $product = ProductFactory::new()->create([
+            'category' => $category,
+            'owner' => $user
+        ]);
         $data = $this->loginUserWithCredentials($client, $user)
-            ->request('GET', '/api/products')->toArray();
-        $this->assertArrayNotHasKey('isMe', $data['hydra:member'][0]['owner']);
+            ->request('GET', '/api/products/' . $product->getId())
+            ->toArray();
+        $this->assertArrayNotHasKey('isMe', $data['owner']);
+        $userAdmin = $this->createUserAdmin();
+        $product2 = ProductFactory::new()->create([
+            'category' => $category,
+            'owner' => $userAdmin
+        ]);
+        $data = $this->loginUserWithCredentials($client, $userAdmin)
+            ->request('GET', '/api/products/' . $product2->getId())
+            ->toArray();
+        $this->assertArrayHasKey('isMe', $data['owner']);
+        $this->assertTrue($data['owner']['isMe']);
     }
 }
