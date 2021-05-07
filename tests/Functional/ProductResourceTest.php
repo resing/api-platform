@@ -50,13 +50,11 @@ class ProductResourceTest extends CustomApiTestCase
             ->request('GET', '/api/products/' . $product->getId())
             ->toArray();
         $this->assertArrayNotHasKey('isMe', $data['owner']);
-        $userAdmin = $this->createUserAdmin();
-        $product2 = ProductFactory::new()->create([
-            'category' => $category,
-            'owner' => $userAdmin
-        ]);
-        $data = $this->loginUserWithCredentials($client, $userAdmin)
-            ->request('GET', '/api/products/' . $product2->getId())
+        $user->refresh();
+        $user->setRoles(['ROLE_ADMIN']);
+        $user->save();
+        $data = $this->loginUserWithCredentials($client, $user)
+            ->request('GET', '/api/products/' . $product->getId())
             ->toArray();
         $this->assertArrayHasKey('isMe', $data['owner']);
         $this->assertTrue($data['owner']['isMe']);
