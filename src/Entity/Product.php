@@ -6,9 +6,11 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Dto\ProductOutPut;
 
 /**
  * @ApiResource(
+ *     output=ProductOutPut::class,
  *     normalizationContext={"groups"={"product:read"}},
  *     denormalizationContext={"groups"={"product:write"}},
  *      itemOperations={
@@ -35,44 +37,37 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"product:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"product:read"})
      */
     private $description;
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"product:read"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"product:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"product:read"})
      */
     private $category;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"product:read"})
      */
     private $owner;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups("admin:read")
      */
     private $isPublished = false;
 
