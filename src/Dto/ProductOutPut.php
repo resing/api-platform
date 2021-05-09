@@ -54,6 +54,12 @@ class ProductOutPut
 
     public $isPublished;
 
+    /**
+     * @var bool
+     * @Groups({"product:read"})
+     */
+    public $unlimited;
+
 
     public static function createFromEntity(Product $product)
     {
@@ -65,6 +71,7 @@ class ProductOutPut
         $output->createdAt = $product->getCreatedAt();
         $output->description = $product->getDescription();
         $output->isPublished = $product->getIsPublished();
+        $output->unlimited = $product->getUnlimited();
 
         return $output;
     }

@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Dto\ProductOutPut;
+use App\Doctrine\ProductUnlimitedListener;
 
 /**
  * @ApiResource(
@@ -24,6 +25,7 @@ use App\Dto\ProductOutPut;
  * )
  * )
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @ORM\EntityListeners({ProductUnlimitedListener::class})
  */
 class Product
 {
@@ -73,7 +75,12 @@ class Product
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $quantity;
+    private $quantity = false;
+
+    /**
+     * @var bool
+     */
+    private $unlimited =  false;
 
     public function __construct()
     {
@@ -177,6 +184,18 @@ class Product
     public function setQuantity(?int $quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getUnlimited(): ?bool
+    {
+        return $this->unlimited;
+    }
+
+    public function setUnlimited(?bool $unlimited): self
+    {
+        $this->unlimited = $unlimited;
 
         return $this;
     }

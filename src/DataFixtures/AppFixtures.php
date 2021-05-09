@@ -46,6 +46,8 @@ class AppFixtures extends Fixture
             'price' => 500,
             'owner' => $userAdmin,
             'category' => $categoryFactory2,
+            'quantity' => 100,
+
         ]);
 
         $productFactory->create([
@@ -54,6 +56,7 @@ class AppFixtures extends Fixture
             'price' => 300,
             'owner' => $user2,
             'category' => $categoryFactory2,
+            'quantity' => 30,
         ]);
         $productFactory->create([
             'name' => 'pantalon',
@@ -61,6 +64,7 @@ class AppFixtures extends Fixture
             'price' => 300,
             'owner' => $user2,
             'category' => $categoryFactory2,
+            'quantity' => 300,
         ]);
         ProductFactory::new()::createMany(10);
     }

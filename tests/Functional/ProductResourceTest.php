@@ -40,12 +40,9 @@ class ProductResourceTest extends CustomApiTestCase
     public function testIsMe()
     {
         $client = self::createClient();
-        $user = UserFactory::new()->create();
-        $category = CategoryFactory::new()->create();
-        $product = ProductFactory::new()->create([
-            'category' => $category,
-            'owner' => $user
-        ]);
+        /** @var \App\Entity\User|object|\Zenstruck\Foundry\Proxy $user  */
+        list($user, $product) = $this->createUserCategoryProduct();
+        /** @var \App\Entity\Product|object|\Zenstruck\Foundry\Proxy $product  */
         $data = $this->loginUserWithCredentials($client, $user)
             ->request('GET', '/api/products/' . $product->getId())
             ->toArray();
@@ -58,5 +55,29 @@ class ProductResourceTest extends CustomApiTestCase
             ->toArray();
         $this->assertArrayHasKey('isMe', $data['owner']);
         $this->assertTrue($data['owner']['isMe']);
+    }
+
+    public function testIsUnlimitedProduct()
+    {
+        $client = self::createClient();
+        /** @var \App\Entity\User|object|\Zenstruck\Foundry\Proxy $user  */
+        list($user, $product) = $this->createUserCategoryProduct();
+        /** @var \App\Entity\Product|object|\Zenstruck\Foundry\Proxy $product  */
+        $product->refresh();
+        $product->setQuantity(30);
+        $product->save();
+        $this->loginUserWithCredentials($client, $user)
+            ->request('GET', '/api/products/' . $product->getId());
+        $this->assertJsonContains([
+            'unlimited' => false,
+        ]);
+        $product->refresh();
+        $product->setQuantity(400);
+        $product->save();
+        $this->loginUserWithCredentials($client, $user)
+            ->request('GET', '/api/products/' . $product->getId());
+        $this->assertJsonContains([
+            'unlimited' => true,
+        ]);
     }
 }

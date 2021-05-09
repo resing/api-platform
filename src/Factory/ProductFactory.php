@@ -35,6 +35,7 @@ final class ProductFactory extends ModelFactory
             'price' => self::faker()->randomNumber(3),
             'owner' => UserFactory::new(),
             'category' => CategoryFactory::new(),
+            'quantity' => self::faker()->numberBetween(4, 200),
         ];
     }
 

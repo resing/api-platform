@@ -99,4 +99,19 @@ class CustomApiTestCase extends ApiTestCase
 
         return $userAdmin;
     }
+
+
+    /**
+     * @return array
+     */
+    public function createUserCategoryProduct(): array
+    {
+        $user = UserFactory::new()->create();
+        $category = CategoryFactory::new()->create();
+        $product = ProductFactory::new()->create([
+            'category' => $category,
+            'owner' => $user
+        ]);
+        return [$user, $product];
+    }
 }
