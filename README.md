@@ -7,7 +7,11 @@
     * ROLE_ADMIN can see all products with owner property
     * ROLE_PROVIDER can see his products without owner property
     * ROLE_USER can see all products without owner property
-
+6. BDD conception:
+    * category
+    * order
+    * product
+    * user
 ![Image of Fintechtocat](https://octodex.github.com/images/Fintechtocat.png)
    
 
