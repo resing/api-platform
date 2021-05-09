@@ -14,7 +14,7 @@ use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class CustomApiTestCase extends ApiTestCase
+abstract class CustomApiTestCase extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;

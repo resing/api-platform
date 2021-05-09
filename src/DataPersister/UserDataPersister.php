@@ -45,7 +45,6 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
-
         if (($context['item_operation_name'] ?? null) === 'put') {
             $this->logger->info(sprintf('User "%s" is being updated!', $data->getId()));
         }
