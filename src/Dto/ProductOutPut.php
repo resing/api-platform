@@ -43,7 +43,7 @@ class ProductOutPut
 
     /**
      * @var User
-     * @Groups({"product:read"})
+     * @Groups({"admin:read"})
      */
     public $owner;
 

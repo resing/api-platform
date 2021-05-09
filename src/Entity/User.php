@@ -48,6 +48,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"admin:read"})
      */
     private $roles = [];
 
@@ -64,7 +65,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"user:read", "product:read"})
+     * @Groups({"admin:read", "owner:read"})
      */
     private $username;
     /**
@@ -89,6 +90,11 @@ class User implements UserInterface
      * @Groups({"admin:read"})
      */
     private $isMe = false;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $country;
 
     public function __construct()
     {
@@ -261,5 +267,17 @@ class User implements UserInterface
     public function setIsMe(bool $isMe): void
     {
         $this->isMe = $isMe;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
     }
 }

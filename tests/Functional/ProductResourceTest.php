@@ -15,13 +15,24 @@ class ProductResourceTest extends CustomApiTestCase
         $client = self::createClient();
         $user = $this->createUserWithProduct();
         ProductFactory::new()::createMany(10);
+        $user->refresh();
+        // add user without role a customer
+        $user->setRoles([]);
+        $user->save();
         $this->loginUserWithCredentials($client, $user)
             ->request('GET', '/api/products');
-        $this->assertJsonContains(['hydra:totalItems' => 1]);
+        $this->assertJsonContains(['hydra:totalItems' => 11]);
         $userAdmin = $this->createUserAdmin();
         $this->loginUserWithCredentials($client, $userAdmin)
             ->request('GET', '/api/products');
         $this->assertJsonContains(['hydra:totalItems' => 11]);
+        $user->refresh();
+        // add user without role a customer
+        $user->setRoles(['ROLE_PROVIDER']);
+        $user->save();
+        $this->loginUserWithCredentials($client, $user)
+            ->request('GET', '/api/products');
+        $this->assertJsonContains(['hydra:totalItems' => 1]);
     }
 
     public function testIsPublishedByUser()
@@ -46,7 +57,7 @@ class ProductResourceTest extends CustomApiTestCase
         $data = $this->loginUserWithCredentials($client, $user)
             ->request('GET', '/api/products/' . $product->getId())
             ->toArray();
-        $this->assertArrayNotHasKey('isMe', $data['owner']);
+        $this->assertArrayNotHasKey('owner', $data);
         $user->refresh();
         $user->setRoles(['ROLE_ADMIN']);
         $user->save();

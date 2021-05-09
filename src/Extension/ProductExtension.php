@@ -55,6 +55,9 @@ class ProductExtension implements QueryCollectionExtensionInterface, QueryItemEx
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return;
         }
+        if (!$this->security->isGranted('ROLE_PROVIDER')) {
+            return;
+        }
 
         $rootAlias = $queryBuilder->getRootAliases()[0];
 

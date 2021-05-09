@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use App\Factory\CategoryFactory;
 use App\Factory\ProductFactory;
+use App\Factory\StoreFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -30,6 +31,8 @@ class AppFixtures extends Fixture
         $user2 = UserFactory::new()->create([
             'email' => 'simple@example.com',
             'username' => 'simple',
+            'country' => 'Tunisia',
+            'roles' => ['ROLE_PROVIDER'],
             'password' => $this->passwordEncoder->encodePassword(new User(), 'simple'),
         ]);
 
@@ -67,5 +70,8 @@ class AppFixtures extends Fixture
             'quantity' => 300,
         ]);
         ProductFactory::new()::createMany(10);
+        UserFactory::new()::createMany(10, [
+            'roles' => [],
+        ]);
     }
 }
