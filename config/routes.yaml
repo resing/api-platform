@@ -3,3 +3,7 @@
 #    controller: App\Controller\DefaultController::index
 api_login_check:
   path: /api/login_check
+
+authentication_inscription:
+  path: /api/users
+  methods: ['POST']

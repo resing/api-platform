@@ -21,6 +21,7 @@ class UserResourceTest extends CustomApiTestCase
             ->request('GET', '/api/users');
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['hydra:totalItems' => 3]);
+
         $this->loginUserWithCredentials($client, $user1)
             ->request('GET', '/api/users');
         $this->assertResponseIsSuccessful();
@@ -31,6 +32,7 @@ class UserResourceTest extends CustomApiTestCase
                 "email"=> $user1->getEmail(),
             ]
         ]]);
+
         $this->loginUserWithCredentials($client, $user2)
             ->request('GET', '/api/users');
         $this->assertJsonContains(['hydra:totalItems' => 1]);
@@ -40,5 +42,24 @@ class UserResourceTest extends CustomApiTestCase
                 "email"=> $user2->getEmail(),
             ]
         ]]);
+    }
+
+    public function testUpdateUser()
+    {
+        $client = self::createClient();
+        $user = UserFactory::new()->create();
+        $this->loginUserWithCredentials($client, $user)
+            ->request('PUT', '/api/users/'.$user->getId(), [
+                'json' => [
+                    'username' => 'newusername',
+                    'roles' => ['ROLE_ADMIN'] // will be ignored
+                ]
+            ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'username' => 'newusername'
+        ]);
+        $user->refresh();
+        $this->assertEquals(['ROLE_USER'], $user->getRoles());
     }
 }

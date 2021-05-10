@@ -35,7 +35,7 @@ final class UserFactory extends ModelFactory
             'username' => self::faker()->userName(),
             'phoneNumber' => self::faker()->e164PhoneNumber(),
             'country' => self::faker()->country(),
-            'roles' => ['ROLE_PROVIDER'],
+            'roles' => [],
             'birthday' => self::faker()->dateTimeBetween('1990-01-01', '2012-12-31'),
             // hashed version of "test"
             // php bin/console security:encode-password --env=test

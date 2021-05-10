@@ -8,10 +8,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -20,16 +22,21 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *     denormalizationContext={"groups"={"user:write"}},
  *      itemOperations={
  *          "get",
- *          "put",
+ *          "put"={"security"="is_granted('ROLE_USER') and object == user or is_granted('ROLE_ADMIN')" },
  *          "delete"={"security"="is_granted('ROLE_ADMIN')"}
  *     },
  *     collectionOperations={
  *          "get",
- *          "post",
+ *          "post"={
+ *              "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
+ *              "validation_groups"={"Default", "create"}
+ *          },
  *     }
  * )
  * @ApiFilter(PropertyFilter::class)
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"username"})
+ * @UniqueEntity(fields={"email"})
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository", repositoryClass=UserRepository::class)
  */
 class User implements UserInterface
 {
@@ -42,21 +49,31 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "user:write"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"admin:read"})
+     * @Groups({"admin:read", "admin:write"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"user:write"})
      */
     private $password;
+
+    /**
+     * @Groups("user:write")
+     * @SerializedName("password")
+     * @Assert\NotBlank(groups={"create"})
+     */
+    private $plainPassword;
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="owner", cascade={"persist"})
@@ -65,25 +82,24 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"admin:read", "owner:read"})
+     * @Groups({"admin:read", "owner:read", "user:write"})
+     * @Assert\NotBlank()
      */
     private $username;
-    /**
-     * @SerializedName("password")
-     */
-    private $plainPassword;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"admin:read", "owner:read"})
+     * @Groups({"admin:read", "owner:read", "user:write"})
+     * @Assert\NotBlank()
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"admin:read", "owner:read"})
+     * @Groups({"admin:read", "owner:read", "user:write"})
+     * @Assert\NotBlank()
      */
-    private $Birthday;
+    private $birthday;
 
     /**
      * @var bool
@@ -93,6 +109,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"admin:read", "owner:read", "user:write"})
      */
     private $country;
 
@@ -249,12 +266,12 @@ class User implements UserInterface
 
     public function getBirthday(): ?\DateTimeInterface
     {
-        return $this->Birthday;
+        return $this->birthday;
     }
 
-    public function setBirthday(?\DateTimeInterface $Birthday): self
+    public function setBirthday(?\DateTimeInterface $birthday): self
     {
-        $this->Birthday = $Birthday;
+        $this->birthday = $birthday;
 
         return $this;
     }
