@@ -9,7 +9,7 @@
     * ROLE_USER can get all products without owner property
 6. Management rules for user:
    * Everybody can create user without roles (ROLE_USER default)
-   * Only Admin can update roles (ROLE_PROVIDER or ROLE_ADMIN, ROLE_USER)
+   * Only Admin can update roles (ROLE_USER to ROLE_PROVIDER or ROLE_ADMIN)
 7. BDD model:
     * category
     * order
