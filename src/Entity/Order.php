@@ -4,14 +4,37 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderRepository;
+use App\Validator\IsValidProduct;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Ulid;
+use App\Doctrine\OrderSetOwnerListener;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"order:read"}},
+ *     denormalizationContext={"groups"={"order:write"}},
+ *      itemOperations={
+ *          "get",
+ *          "delete",
+ *     },
+ *     collectionOperations={
+ *          "get",
+ *          "post"
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=OrderRepository::class)
+ * @ORM\EntityListeners({OrderSetOwnerListener::class})
+ * @ORM\Table(name="`order`")
+ * @IsValidProduct()
  */
 class Order
 {
+    public function __construct()
+    {
+        $this->reference = new Ulid();
+    }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -21,23 +44,27 @@ class Order
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"order:read"})
      */
     private $reference;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"order:read", "order:write"})
      */
     private $quantity;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orders")
+     * @Groups({"admin:read","order:read", "order:write"})
      */
     private $product;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
+     * @Groups({"admin:read"})
      */
-    private $user;
+    private $owner;
 
     public function getId(): ?int
     {
@@ -80,14 +107,14 @@ class Order
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
-        return $this->user;
+        return $this->owner;
     }
 
-    public function setUser(?User $user): self
+    public function setOwner(?User $owner): self
     {
-        $this->user = $user;
+        $this->owner = $owner;
 
         return $this;
     }

@@ -36,3 +36,7 @@ services:
     App\Serializer\AdminGroupContextBuilder:
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\AdminGroupContextBuilder.inner' ]
+
+    App\Doctrine\OrderSetOwnerListener:
+        tags: [ doctrine.orm.entity_listener ]
+

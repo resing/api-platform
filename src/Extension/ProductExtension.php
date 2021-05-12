@@ -52,19 +52,14 @@ class ProductExtension implements QueryCollectionExtensionInterface, QueryItemEx
             return;
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return;
-        }
-        if (!$this->security->isGranted('ROLE_PROVIDER')) {
-            return;
-        }
+        if ($this->security->isGranted('ROLE_PROVIDER')) {
+            $rootAlias = $queryBuilder->getRootAliases()[0];
 
-        $rootAlias = $queryBuilder->getRootAliases()[0];
-
-        $queryBuilder->andWhere(sprintf('
+            $queryBuilder->andWhere(sprintf('
                     %s.owner = :owner',
-            $rootAlias
-        ))
-            ->setParameter('owner', $this->security->getUser());
+                $rootAlias
+            ))
+                ->setParameter('owner', $this->security->getUser());
+        }
     }
 }

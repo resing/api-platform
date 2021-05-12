@@ -110,8 +110,9 @@ abstract class CustomApiTestCase extends ApiTestCase
         $category = CategoryFactory::new()->create();
         $product = ProductFactory::new()->create([
             'category' => $category,
-            'owner' => $user
+            'owner' => $user,
         ]);
+
         return [$user, $product];
     }
 }

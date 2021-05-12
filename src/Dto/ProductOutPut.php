@@ -13,7 +13,7 @@ class ProductOutPut
 {
     /**
      * @var string
-     * @Groups({"product:read"})
+     * @Groups({"product:read", "order:read"})
      */
     public $name;
 
@@ -25,7 +25,7 @@ class ProductOutPut
 
     /**
      * @var int
-     * @Groups({"product:read"})
+     * @Groups({"product:read", "admin:read"})
      */
     public $price;
 
@@ -61,6 +61,13 @@ class ProductOutPut
     public $unlimited;
 
 
+    /**
+     * @var int
+     * @Groups({"product:read"})
+     */
+    public $quantity;
+
+
     public static function createFromEntity(Product $product)
     {
         $output = new ProductOutPut();
@@ -72,6 +79,7 @@ class ProductOutPut
         $output->description = $product->getDescription();
         $output->isPublished = $product->getIsPublished();
         $output->unlimited = $product->getUnlimited();
+        $output->quantity = $product->getQuantity();
 
         return $output;
     }

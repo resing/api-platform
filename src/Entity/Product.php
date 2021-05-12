@@ -77,7 +77,7 @@ class Product
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $quantity = false;
+    private $quantity = 0;
 
     /**
      * @var bool
