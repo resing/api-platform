@@ -15,11 +15,15 @@ use App\Doctrine\OrderSetOwnerListener;
  *     normalizationContext={"groups"={"order:read"}},
  *     denormalizationContext={"groups"={"order:write"}},
  *      itemOperations={
- *          "get",
+ *          "get"= {
+ *              "normalization_context"={"groups"={"order:read", "order:item:get"}},
+ *           },
  *          "delete",
  *     },
  *     collectionOperations={
- *          "get",
+ *           "get" = {
+ *                   "normalization_context"={"groups"={"order:read", "order:collection:get"}},
+ *                  },
  *          "post"
  *     }
  * )

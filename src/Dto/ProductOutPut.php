@@ -13,31 +13,31 @@ class ProductOutPut
 {
     /**
      * @var string
-     * @Groups({"product:read", "order:read"})
+     * @Groups({"product:read", "order:item:get", "order:collection:get"})
      */
     public $name;
 
     /**
      * @var string
-     * @Groups({"product:read"})
+     * @Groups({"product:read", "order:item:get"})
      */
     public $description;
 
     /**
      * @var int
-     * @Groups({"product:read", "admin:read"})
+     * @Groups({"product:read", "admin:read", "order:item:get"})
      */
     public $price;
 
     /**
      * @var \DateTime
-     * @Groups({"product:read"})
+     * @Groups({"product:read", "order:item:ge"})
      */
     public $createdAt;
 
     /**
      * @var Category
-     * @Groups({"product:read"})
+     * @Groups({"product:read", "order:item:get"})
      */
     public $category;
 
