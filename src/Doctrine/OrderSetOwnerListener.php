@@ -24,8 +24,11 @@ class OrderSetOwnerListener
 
         if ($this->security->getUser()) {
             $order->setOwner($this->security->getUser());
-            $quantityProduct = $order->getProduct()->getQuantity();
-            $order->getProduct()->setQuantity($quantityProduct - $order->getQuantity());
+
+            foreach ($order->getOrderProducts() as $orderProduct) {
+                $quantityProduct = $orderProduct->getProduct()->getQuantity();
+                $orderProduct->getProduct()->setQuantity($quantityProduct - $orderProduct->getQuantity());
+            }
         }
     }
 }

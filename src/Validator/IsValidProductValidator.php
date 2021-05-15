@@ -20,6 +20,7 @@ class IsValidProductValidator extends ConstraintValidator
     }
     public function validate($value, Constraint $constraint)
     {
+
         /* @var $constraint \App\Validator\IsValidProduct */
 
         if (!$value instanceof Order) {
@@ -28,17 +29,19 @@ class IsValidProductValidator extends ConstraintValidator
 
         if($this->security->isGranted('ROLE_PROVIDER')) {
             $this->context->buildViolation('Cannot order product because you are provider')
-                ->atPath('product')
+                ->atPath('owner')
                 ->addViolation();
             return;
         }
 
-        if($value->getQuantity() > $value->getProduct()->getQuantity()) {
-            $this->context->buildViolation('Quantity not available')
-                ->atPath('quantity')
-                ->setCode('401')
-                ->addViolation();
-            return;
+        $orderProducts = $value->getOrderProducts();
+
+        foreach ($orderProducts as $orderProduct) {
+            if($orderProduct->getQuantity() > $orderProduct->getProduct()->getQuantity()) {
+                $this->context->buildViolation("Quantity not available for product Id {$orderProduct->getProduct()->getId()}")
+                    ->addViolation();
+                return;
+            }
         }
     }
 }

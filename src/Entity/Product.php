@@ -85,14 +85,14 @@ class Product
     private $unlimited =  false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="product")
      */
-    private $orders;
+    private $orderProducts;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->orders = new ArrayCollection();
+        $this->orderProducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -209,29 +209,29 @@ class Product
     }
 
     /**
-     * @return Collection|Order[]
+     * @return Collection|OrderProduct[]
      */
-    public function getOrders(): Collection
+    public function getOrderProducts(): Collection
     {
-        return $this->orders;
+        return $this->orderProducts;
     }
 
-    public function addOrder(Order $order): self
+    public function addOrderProduct(OrderProduct $orderProduct): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setProduct($this);
+        if (!$this->orderProducts->contains($orderProduct)) {
+            $this->orderProducts[] = $orderProduct;
+            $orderProduct->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeOrder(Order $order): self
+    public function removeOrderProduct(OrderProduct $orderProduct): self
     {
-        if ($this->orders->removeElement($order)) {
+        if ($this->orderProducts->removeElement($orderProduct)) {
             // set the owning side to null (unless already changed)
-            if ($order->getProduct() === $this) {
-                $order->setProduct(null);
+            if ($orderProduct->getProduct() === $this) {
+                $orderProduct->setProduct(null);
             }
         }
 

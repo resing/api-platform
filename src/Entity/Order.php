@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderRepository;
 use App\Validator\IsValidProduct;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Ulid;
@@ -37,6 +39,7 @@ class Order
     public function __construct()
     {
         $this->reference = new Ulid();
+        $this->orderProducts = new ArrayCollection();
     }
 
     /**
@@ -52,23 +55,19 @@ class Order
      */
     private $reference;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"order:read", "order:write"})
-     */
-    private $quantity;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orders")
-     * @Groups({"admin:read","order:read", "order:write"})
-     */
-    private $product;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
-     * @Groups({"admin:read"})
+     * @Groups({"admin:read","order:write"})
      */
     private $owner;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrderProduct::class, mappedBy="command", cascade={"persist"})
+     * @Groups({"order:write"})
+     */
+    private $orderProducts;
+
 
     public function getId(): ?int
     {
@@ -87,30 +86,6 @@ class Order
         return $this;
     }
 
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Product $product): self
-    {
-        $this->product = $product;
-
-        return $this;
-    }
-
     public function getOwner(): ?User
     {
         return $this->owner;
@@ -119,6 +94,36 @@ class Order
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrderProduct[]
+     */
+    public function getOrderProducts(): Collection
+    {
+        return $this->orderProducts;
+    }
+
+    public function addOrderProduct(OrderProduct $orderProduct): self
+    {
+        if (!$this->orderProducts->contains($orderProduct)) {
+            $this->orderProducts[] = $orderProduct;
+            $orderProduct->setCommand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProduct(OrderProduct $orderProduct): self
+    {
+        if ($this->orderProducts->removeElement($orderProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($orderProduct->getCommand() === $this) {
+                $orderProduct->setCommand(null);
+            }
+        }
 
         return $this;
     }
