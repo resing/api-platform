@@ -40,3 +40,18 @@ services:
     App\Doctrine\OrderSetOwnerListener:
         tags: [ doctrine.orm.entity_listener ]
 
+#    App\Service\FindData\LoadDataUser: ~
+#    App\Service\FindData\LoadOrderData: ~
+#
+#    App\Service\FindData\LoadDataInterface $shoutyTransformer: '@App\Service\FindData\LoadOrderData'
+#    App\Service\FindData\LoadDataInterface: '@App\Service\FindData\LoadDataUser'
+
+    App\Command\ExportDataCommand:
+        arguments:
+            $exportData: !tagged_iterator export.data # Inject all services tagged with "scoring.factor"
+            $directory: '%kernel.project_dir%/public/uploads'
+        tags:
+            - { name: 'console.command'}
+
+
+
