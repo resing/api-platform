@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Service\ExportData\DataExportInterface;
+use App\Service\ExportData\LogFileInterface;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -42,5 +43,8 @@ class Kernel extends BaseKernel
     {
         $container->registerForAutoconfiguration(DataExportInterface::class)
             ->addTag('export.data');
+
+        $container->registerForAutoconfiguration(LogFileInterface::class)
+            ->addTag('export.log');
     }
 }

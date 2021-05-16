@@ -44,6 +44,7 @@ services:
         arguments:
             $exportData: !tagged_iterator export.data # Inject all services tagged with "scoring.factor"
             $directory: '%kernel.project_dir%/public/exports'
+            $exportLog: !tagged_iterator export.log
         tags:
             - { name: 'console.command' }
 
