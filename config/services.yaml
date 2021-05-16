@@ -40,3 +40,10 @@ services:
     App\Doctrine\OrderSetOwnerListener:
         tags: [ doctrine.orm.entity_listener ]
 
+    App\Command\ExportDataCommand:
+        arguments:
+            $exportData: !tagged_iterator export.data # Inject all services tagged with "scoring.factor"
+            $directory: '%kernel.project_dir%/public/exports'
+        tags:
+            - { name: 'console.command' }
+
