@@ -68,7 +68,11 @@ class AppFixtures extends Fixture
             'category' => $categoryFactory2,
             'quantity' => 300,
         ]);
-        ProductFactory::new()::createMany(10);
+        ProductFactory::new()::createMany(10,[
+            'owner' => UserFactory::new([
+                'roles' => ['ROLE_PROVIDER']
+            ])
+        ]);
         UserFactory::new()::createMany(10, [
             'roles' => [],
         ]);
