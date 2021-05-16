@@ -42,14 +42,17 @@ services:
 
     App\Service\LoadData\UsersLoadData: ~
     App\Service\LoadData\OrdersLoadData: ~
+    App\Service\LoadData\ProductsLoadData: ~
 
     App\Service\LoadData\LoadDataInterface $transformer: '@App\Service\LoadData\UsersLoadData'
     App\Service\LoadData\LoadDataInterface: '@App\Service\LoadData\OrdersLoadData'
+    App\Service\LoadData\LoadDataInterface $productTransformer: '@App\Service\LoadData\ProductsLoadData'
 
     App\Command\ExportDataCommand:
         arguments:
             $exportData: !tagged_iterator export.data # Inject all services tagged with "scoring.factor"
             $directory: '%kernel.project_dir%/public/exports'
+            $exportLog: !tagged_iterator export.log
         tags:
             - { name: 'console.command' }
 

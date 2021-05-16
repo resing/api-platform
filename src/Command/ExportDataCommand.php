@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Service\ExportData\DataExportInterface;
+use App\Service\ExportData\LogFileInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,13 +19,18 @@ class ExportDataCommand extends Command
      */
     private $exportData;
     private $directory;
+    /**
+     * @var LogFileInterface[]
+     */
+    private $exportLog;
 
-    public function __construct(iterable $exportData, string $directory)
+    public function __construct(iterable $exportData, string $directory, iterable $exportLog)
     {
         parent::__construct(null);
 
         $this->exportData = $exportData;
         $this->directory = $directory;
+        $this->exportLog = $exportLog;
     }
 
     protected function configure()
@@ -41,12 +47,17 @@ class ExportDataCommand extends Command
         $progressBar = new ProgressBar($output, 3);
         $progressBar->setFormat('minimal');
         $progressBar->start();
+        $progressBar->advance();
         // start logic Business
         foreach ($this->exportData as $data) {
             $filesystem->dumpFile($this->directory."/{$data->nameFile()}.csv", $data->export());
         }
+
+        foreach ($this->exportLog as $logFile) {
+            $logFile->logDateGeneration();
+        }
         // end logic Business
-        $progressBar->advance();
+
         $output->writeln('finished');
         $progressBar->finish();
 
