@@ -3,22 +3,25 @@
 
 namespace App\Service\ExportData;
 
+use App\Entity\OrderProduct;
 use App\Repository\OrderProductRepository;
+use App\Service\LoadData\LoadDataInterface;
 
 class OrdersExport implements DataExportInterface
 {
-    private $orderProductRepository;
 
-    public function __construct(OrderProductRepository $orderProductRepository)
+    private $loadData;
+
+    public function __construct(LoadDataInterface $loadData)
     {
-
-        $this->orderProductRepository = $orderProductRepository;
+        $this->loadData = $loadData;
     }
 
     public function export(): string
     {
         $rows = [];
-        foreach ($this->orderProductRepository->findAll() as $orderProduct) {
+        /** @var  $orderProduct OrderProduct*/
+        foreach ($this->loadData->findAll() as $orderProduct) {
             $rows[] = implode(',',
                 [
                     $orderProduct->getId(),

@@ -3,21 +3,24 @@
 
 namespace App\Service\ExportData;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\LoadData\LoadDataInterface;
 
 class UsersExport implements DataExportInterface
 {
-    private $userRepository;
+    private $loadData;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(LoadDataInterface $transformer)
     {
-        $this->userRepository = $userRepository;
+        $this->loadData = $transformer;
     }
 
     public function export(): string
     {
         $rows = [];
-        foreach ($this->userRepository->findAll() as $user) {
+        /** @var  User $user */
+        foreach ($this->loadData->findAll() as $user) {
             $rows[] = implode(',', [$user->getId(), $user->getUsername(), $user->getEmail(), $user->getPhoneNumber()]);
         }
 

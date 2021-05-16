@@ -40,6 +40,12 @@ services:
     App\Doctrine\OrderSetOwnerListener:
         tags: [ doctrine.orm.entity_listener ]
 
+    App\Service\LoadData\UsersLoadData: ~
+    App\Service\LoadData\OrdersLoadData: ~
+
+    App\Service\LoadData\LoadDataInterface $transformer: '@App\Service\LoadData\UsersLoadData'
+    App\Service\LoadData\LoadDataInterface: '@App\Service\LoadData\OrdersLoadData'
+
     App\Command\ExportDataCommand:
         arguments:
             $exportData: !tagged_iterator export.data # Inject all services tagged with "scoring.factor"
