@@ -12,7 +12,6 @@ class OrdersLoadData implements LoadDataInterface
 
     public function __construct(OrderProductRepository $orderProductRepository)
     {
-
         $this->orderProductRepository = $orderProductRepository;
     }
 
