@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Service\Bike;
+use App\Service\Car;
 use App\Service\Locomotion;
 use App\Service\TravelCost;
 use Symfony\Component\Console\Command\Command;
@@ -31,9 +32,11 @@ class LocomotionCommand extends Command
 //        $travelCost= new TravelCost();
 //        $result = $travelCost->resume($locomotion);
 //        $output->writeln($result);
-        $bike = new Bike(4);
+        // use case two
+       // $bike = new Bike(4);
+        $car = new Car(20);
         $travelCost = new TravelCost();
-        $result = $travelCost->resume($bike);
+        $result = $travelCost->resume($car);
         $output->writeln($result);
         return Command::SUCCESS;
     }

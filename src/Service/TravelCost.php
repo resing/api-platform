@@ -6,9 +6,8 @@ namespace App\Service;
 
 class TravelCost
 {
-    public function resume(Locomotion $locomotion): string
+    public function resume(LocomotionInterface $locomotion): string
     {
-        return "You are energy {$locomotion->energy()},
-        and it costs ".$locomotion->costByKm() * $locomotion->getDistance()." euro";
+        return $locomotion->resume();
     }
 }
