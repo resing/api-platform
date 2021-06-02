@@ -6,12 +6,7 @@ namespace App\Service;
 
 class Bike extends Locomotion
 {
-    public function __construct(int $distance)
-    {
-        parent::__construct($distance);
-    }
-
-    public function energy(): string
+    public function energy()
     {
         return '';
     }

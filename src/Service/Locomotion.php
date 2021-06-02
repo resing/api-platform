@@ -13,14 +13,14 @@ class Locomotion
         $this->distance = $distance;
     }
 
-    public function energy(): string
+    public function energy()
     {
         return 'gasoline';
     }
 
     public function costByKm()
     {
-        return '15';
+        return 15;
     }
 
     public function getDistance()
